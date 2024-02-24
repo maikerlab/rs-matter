@@ -18,10 +18,13 @@
 use core::fmt::{Debug, Display};
 use core::mem::MaybeUninit;
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(not(feature = "std"), not(feature = "riot-os")))]
 pub use no_std_net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 #[cfg(feature = "std")]
 pub use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
+
+#[cfg(feature = "riot-os")]
+use embedded_nal_async::{IpAddr, Ipv4Addr, SocketAddr};
 
 use crate::error::Error;
 
