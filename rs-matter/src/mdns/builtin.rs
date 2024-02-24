@@ -9,8 +9,10 @@ use log::{info, warn};
 use crate::data_model::cluster_basic_information::BasicInfoConfig;
 use crate::error::{Error, ErrorCode};
 use crate::transport::network::{
-    Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6, UdpBuffers, UdpReceive, UdpSend,
+     UdpBuffers, UdpReceive, UdpSend,
 };
+#[cfg(feature = "riot-os")]
+use embedded_nal_async::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 use crate::utils::select::{EitherUnwrap, Notification};
 
 use super::{

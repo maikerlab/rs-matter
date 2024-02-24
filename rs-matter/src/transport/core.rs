@@ -49,9 +49,11 @@ use super::{
         MAX_EXCHANGES,
     },
     mrp::ReliableMessage,
-    network::{Address, Ipv6Addr, SocketAddr, SocketAddrV6, UdpBuffers, UdpReceive, UdpSend},
+    network::{Address, UdpBuffers, UdpReceive, UdpSend},
     packet::{MAX_RX_BUF_SIZE, MAX_RX_STATUS_BUF_SIZE, MAX_TX_BUF_SIZE},
 };
+#[cfg(feature = "riot-os")]
+use embedded_nal_async::{Ipv6Addr, SocketAddr, SocketAddrV6};
 
 #[derive(Debug)]
 enum OpCodeDescriptor {

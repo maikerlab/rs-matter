@@ -20,6 +20,7 @@ alloc = []
 openssl = ["alloc", "dep:openssl", "foreign-types", "hmac", "sha2"]
 mbedtls = ["alloc", "dep:mbedtls"]
 rustcrypto = ["alloc", "sha2", "hmac", "pbkdf2", "hkdf", "aes", "ccm", "p256", "elliptic-curve", "crypto-bigint", "x509-cert", "rand_core"]
+riot-os = ["dep:embedded-nal-async"]
 
 [dependencies]
 rs-matter-macros = { version = "0.1", path = "../rs-matter-macros" }
@@ -64,6 +65,9 @@ elliptic-curve = { version = "0.13", optional = true }
 crypto-bigint = { version = "0.5", default-features = false, optional = true }
 rand_core = { version = "0.6", default-features = false, optional = true }
 x509-cert = { version = "0.2", default-features = false, features = ["pem"], optional = true } # TODO: requires `alloc`
+
+# RIOT OS
+embedded-nal-async = { version = "^0.7.1", optional = true }
 
 # STD
 rand = { version = "0.8", optional = true, default-features = false, features = ["std", "std_rng"] }
