@@ -95,6 +95,12 @@ pub use crate::core::*;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
+#[cfg(feature = "riot-os")]
+use {
+    riot_wrappers::{println, ztimer},
+    embedded_hal_async::delay::DelayNs as _
+};
+
 #[cfg(feature = "alloc")]
 #[macro_export]
 macro_rules! alloc {
@@ -109,4 +115,10 @@ macro_rules! alloc {
     ($val:expr) => {
         $val
     };
+}
+
+#[cfg(feature = "riot-os")]
+pub async fn hello_rs_matter(cnt: u32) -> u32 {
+    ztimer::Delay.delay_ms(1000).await;
+    cnt + 1
 }
