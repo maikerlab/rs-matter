@@ -1,6 +1,6 @@
 [package]
 name = "rs-matter"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Kedar Sovani <kedars@gmail.com>", "Ivan Markov", "Project CHIP Authors"]
 description = "Native Rust implementation of the Matter (Smart-Home) ecosystem"
@@ -20,7 +20,7 @@ alloc = []
 openssl = ["alloc", "dep:openssl", "foreign-types", "hmac", "sha2"]
 mbedtls = ["alloc", "dep:mbedtls"]
 rustcrypto = ["alloc", "sha2", "hmac", "pbkdf2", "hkdf", "aes", "ccm", "p256", "elliptic-curve", "crypto-bigint", "x509-cert", "rand_core"]
-riot-os = ["dep:embedded-nal-async"]
+riot-os = ["dep:embedded-nal-async", "dep:riot-wrappers", "dep:embedded-hal-async"]
 
 [dependencies]
 rs-matter-macros = { version = "0.1", path = "../rs-matter-macros" }
@@ -68,10 +68,15 @@ x509-cert = { version = "0.2", default-features = false, features = ["pem"], opt
 
 # RIOT OS
 embedded-nal-async = { version = "^0.7.1", optional = true }
+riot-wrappers = { version =  "0.8.2", optional = true, features = ["with_embedded_hal_async"] }
+embedded-hal-async = { version =  "1.0.0", optional = true }
 
 # STD
 rand = { version = "0.8", optional = true, default-features = false, features = ["std", "std_rng"] }
 async-io = { version = "2", optional = true, default-features = false }
+
+[patch.crates-io]
+riot-wrappers = { path = "../../rust-riot-wrappers" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 astro-dnssd = { version = "0.3" }

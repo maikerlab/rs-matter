@@ -11,8 +11,14 @@ use crate::error::{Error, ErrorCode};
 use crate::transport::network::{
      UdpBuffers, UdpReceive, UdpSend,
 };
+
 #[cfg(feature = "riot-os")]
-use embedded_nal_async::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
+use {
+    riot_wrappers::{println, ztimer},
+    embedded_nal_async::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6},
+    embedded_hal_async::delay::DelayNs as _
+};
+
 use crate::utils::select::{EitherUnwrap, Notification};
 
 use super::{
@@ -131,12 +137,21 @@ impl<'a> MdnsService<'a> {
     where
         S: UdpSend,
     {
-        loop {
+         loop {
+             #[cfg(not(feature = "riot-os"))]
             select(
                 self.notification.wait(),
                 Timer::after(Duration::from_secs(30)),
-            )
-            .await;
+            ).await;
+
+             #[cfg(feature = "riot-os")]
+             select(
+                 self.notification.wait(),
+                 ztimer::Delay.delay_ms(3000),
+             ).await;
+
+             #[cfg(feature = "riot-os")]
+             println!("Started broadcasting...");
 
             for addr in core::iter::once(SocketAddr::V4(SocketAddrV4::new(
                 MDNS_IPV4_BROADCAST_ADDR,
