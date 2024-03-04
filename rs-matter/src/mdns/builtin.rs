@@ -147,11 +147,8 @@ impl<'a> MdnsService<'a> {
              #[cfg(feature = "riot-os")]
              select(
                  self.notification.wait(),
-                 ztimer::Delay.delay_ms(3000),
+                 ztimer::Delay.delay_ms(10000), // TODO: Change to 30 seconds again
              ).await;
-
-             #[cfg(feature = "riot-os")]
-             println!("Started broadcasting...");
 
             for addr in core::iter::once(SocketAddr::V4(SocketAddrV4::new(
                 MDNS_IPV4_BROADCAST_ADDR,
@@ -175,6 +172,9 @@ impl<'a> MdnsService<'a> {
                 let len = self.host.broadcast(self, send_buf, 60)?;
 
                 if len > 0 {
+                    #[cfg(feature = "riot-os")]
+                    println!("Broadcasting mDNS entry to {}", addr);
+
                     info!("Broadcasting mDNS entry to {addr}");
                     send.send_to(&send_buf[..len], addr).await?;
                 }

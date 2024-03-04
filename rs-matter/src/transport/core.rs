@@ -21,6 +21,7 @@ use core::pin::pin;
 
 use embassy_futures::select::{select, select_slice, Either};
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, channel::Channel};
+#[cfg(not(feature = "riot-os"))]
 use embassy_time::{Duration, Timer};
 
 use log::{error, info, warn};
@@ -52,8 +53,13 @@ use super::{
     network::{Address, UdpBuffers, UdpReceive, UdpSend},
     packet::{MAX_RX_BUF_SIZE, MAX_RX_STATUS_BUF_SIZE, MAX_TX_BUF_SIZE},
 };
+
 #[cfg(feature = "riot-os")]
-use embedded_nal_async::{Ipv6Addr, SocketAddr, SocketAddrV6};
+use {
+    riot_wrappers::{println, ztimer},
+    embedded_nal_async::{Ipv6Addr, SocketAddr, SocketAddrV6},
+    embedded_hal_async::delay::DelayNs
+};
 
 #[derive(Debug)]
 enum OpCodeDescriptor {
@@ -494,11 +500,18 @@ impl<'a> Matter<'a> {
     }
 
     pub async fn wait_tx(&self) -> Result<(), Error> {
+        #[cfg(not(feature = "riot-os"))]
         select(
             self.send_notification.wait(),
             Timer::after(Duration::from_millis(100)),
         )
         .await;
+
+        #[cfg(feature = "riot-os")]
+        select(
+            self.send_notification.wait(),
+            ztimer::Delay.delay_ms(100),
+        ).await;
 
         Ok(())
     }
