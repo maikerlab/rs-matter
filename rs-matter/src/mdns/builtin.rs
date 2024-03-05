@@ -172,9 +172,6 @@ impl<'a> MdnsService<'a> {
                 let len = self.host.broadcast(self, send_buf, 60)?;
 
                 if len > 0 {
-                    #[cfg(feature = "riot-os")]
-                    println!("Broadcasting mDNS entry to {}", addr);
-
                     info!("Broadcasting mDNS entry to {addr}");
                     send.send_to(&send_buf[..len], addr).await?;
                 }

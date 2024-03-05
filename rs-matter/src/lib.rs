@@ -116,9 +116,3 @@ macro_rules! alloc {
         $val
     };
 }
-
-#[cfg(feature = "riot-os")]
-pub async fn hello_rs_matter(cnt: u32) -> u32 {
-    ztimer::Delay.delay_ms(1000).await;
-    cnt + 1
-}
