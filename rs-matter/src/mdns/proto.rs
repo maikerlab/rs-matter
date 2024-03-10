@@ -139,7 +139,10 @@ impl<'a> Host<'a> {
     {
         self.set_header(answer);
 
+        // TODO: Sending DNS A record should be optional in general?
+        #[cfg(not(feature = "riot-os"))]
         self.add_ipv4(answer, ttl_sec)?;
+
         self.add_ipv6(answer, ttl_sec)?;
 
         services.for_each(|service| {

@@ -12,6 +12,11 @@ use crate::transport::network::{
      UdpBuffers, UdpReceive, UdpSend,
 };
 
+#[cfg(not(feature = "riot-os"))]
+use crate::transport::network::{
+    Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6,
+};
+
 #[cfg(feature = "riot-os")]
 use {
     riot_wrappers::{println, ztimer},
