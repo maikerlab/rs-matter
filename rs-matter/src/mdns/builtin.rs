@@ -152,10 +152,10 @@ impl<'a> MdnsService<'a> {
              #[cfg(feature = "riot-os")]
              select(
                  self.notification.wait(),
-                 ztimer::Delay.delay_ms(10000), // TODO: Change to 30 seconds again
+                 ztimer::Delay.delay_ms(30000),
              ).await;
 
-            for addr in core::iter::once(SocketAddr::V4(SocketAddrV4::new(
+             for addr in core::iter::once(SocketAddr::V4(SocketAddrV4::new(
                 MDNS_IPV4_BROADCAST_ADDR,
                 MDNS_PORT,
             )))
