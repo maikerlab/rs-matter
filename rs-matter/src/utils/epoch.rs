@@ -1,4 +1,5 @@
 use core::time::Duration;
+use log::debug;
 
 pub type Epoch = fn() -> Duration;
 
@@ -18,4 +19,18 @@ pub fn sys_epoch() -> Duration {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
+}
+
+#[cfg(feature = "riot-os")]
+fn get_timestamp() -> u64 {
+    static mut COUNTER: u64 = MATTER_EPOCH_SECS;
+    unsafe {
+        COUNTER += 1;
+        COUNTER
+    }
+}
+
+#[cfg(feature = "riot-os")]
+pub fn riot_epoch() -> Duration {
+    Duration::from_secs(get_timestamp())
 }
