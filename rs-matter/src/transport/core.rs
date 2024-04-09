@@ -54,15 +54,13 @@ use super::{
     packet::{MAX_RX_BUF_SIZE, MAX_RX_STATUS_BUF_SIZE, MAX_TX_BUF_SIZE},
 };
 
-#[cfg(not(feature = "riot-os"))]
 use super::{
     network::{Ipv6Addr, SocketAddr, SocketAddrV6},
 };
 
 #[cfg(feature = "riot-os")]
 use {
-    riot_wrappers::{println, ztimer},
-    embedded_nal_async::{Ipv6Addr, SocketAddr, SocketAddrV6},
+    riot_wrappers::ztimer,
     embedded_hal_async::delay::DelayNs
 };
 

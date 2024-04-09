@@ -95,12 +95,6 @@ pub use crate::core::*;
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(feature = "riot-os")]
-use {
-    riot_wrappers::{println, ztimer},
-    embedded_hal_async::delay::DelayNs as _
-};
-
 #[cfg(feature = "alloc")]
 #[macro_export]
 macro_rules! alloc {
