@@ -8,10 +8,3 @@ pub fn sys_rand(buf: &mut [u8]) {
 
     thread_rng().fill_bytes(buf);
 }
-
-#[cfg(feature = "riot-os")]
-pub fn riot_rand(buf: &mut [u8]) {
-    use riot_wrappers::random::Random;
-    use rand_core::RngCore as _;
-    Random::new().fill_bytes(buf);
-}
