@@ -139,8 +139,6 @@ impl<'a> Host<'a> {
     {
         self.set_header(answer);
 
-        // TODO: Sending DNS A record should be optional in general?
-        #[cfg(not(feature = "riot-os"))]
         self.add_ipv4(answer, ttl_sec)?;
 
         self.add_ipv6(answer, ttl_sec)?;
@@ -303,12 +301,18 @@ impl<'a> Host<'a> {
         answer: &mut AnswerBuilder<T>,
         ttl_sec: u32,
     ) -> Result<(), PushError> {
-        answer.push((
-            Self::host_fqdn(self.hostname, false).unwrap(),
-            Class::In,
-            ttl_sec,
-            A::from_octets(self.ip[0], self.ip[1], self.ip[2], self.ip[3]),
-        ))
+        // TODO: Sending DNS A record should be optional in general?
+        #[cfg(not(feature = "riot-os"))]
+        {
+            answer.push((
+                Self::host_fqdn(self.hostname, false).unwrap(),
+                Class::In,
+                ttl_sec,
+                A::from_octets(self.ip[0], self.ip[1], self.ip[2], self.ip[3]),
+            ))
+        }
+        #[cfg(feature = "riot-os")]
+        Ok(())
     }
 
     fn add_ipv6<T: Composer>(
